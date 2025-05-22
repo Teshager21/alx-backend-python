@@ -1,6 +1,7 @@
 import os
 import sqlite3
 import functools
+from datetime import datetime
 
 # Absolute path to the SQLite database file
 DB_FILENAME = 'users.db'
