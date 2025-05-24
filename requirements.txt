@@ -1,0 +1,5 @@
+aiosqlite==0.21.0
+dotenv==0.9.9
+mysql-connector-python==9.3.0
+python-dotenv==1.1.0
+typing_extensions==4.13.2

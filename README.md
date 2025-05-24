@@ -1,66 +1,133 @@
-# 🎯 ALX Backend - Python Generators Exercises 🚀
+# 🎯 ALX Backend - Advanced Python Exercises 🚀  
+**Focus Areas:** Generators • Decorators • Context Managers • Async Programming
 
-This repository contains a series of exercises focused on using Python generators for efficient data processing with a MySQL database.
+## 📚 Objective
 
-## Exercises Overview
+To deepen backend Python expertise by implementing advanced techniques like generators, decorators, context managers, and asynchronous programming. These patterns are essential for writing efficient, readable, and maintainable code — particularly for scalable data processing, resource management, and concurrent execution.
 
-### 1. Stream Users One by One
+---
+
+## 🧠 Key Concepts Covered
+
+- **Generators** – Creating memory-efficient iterators for streaming large datasets  
+- **Decorators** – Enhancing or modifying function behavior, such as logging, caching, retries, and transaction handling  
+- **Context Managers** – Managing setup and teardown logic for resources like database connections  
+- **Asynchronous Programming** – Running concurrent database operations using `async/await`, `aiosqlite`, and `asyncio.gather()`
+
+---
+
+## 🗂️ Exercises Overview
+
+### ✅ Generators
+
+#### 1. Stream Users One by One
 - **Function:** `stream_users()`
-- **Description:** A generator that fetches rows one by one from the `user_data` table.
-- **Key Concept:** Yielding individual rows to avoid loading all data at once.
-  
----
+- **Description:** Yields rows one at a time from the `user_data` table.
+- **Concept:** Memory-efficient iteration over database results.
 
-### 2. Stream Users in Batches
-- **Functions:** `stream_users_in_batches(batch_size)` and `batch_processing(batch_size)`
-- **Description:** Fetches users in batches, then processes each batch to filter users over age 25.
-- **Key Concept:** Batch fetching combined with generator-based filtering using list comprehensions.
-  
----
+#### 2. Stream Users in Batches
+- **Function:** `stream_users_in_batches(batch_size)`
+- **Description:** Fetches and yields batches of users for batch processing.
+- **Concept:** Balanced trade-off between memory and performance.
 
-### 3. Lazy Pagination
-- **Functions:** `paginate_users(page_size, offset)` and `lazy_paginate(page_size)`
-- **Description:** Implements pagination by lazily loading pages of user data on demand using a generator.
-- **Key Concept:** Efficiently fetching paginated data using offset and limit, yielding one page at a time.
-  
----
+#### 3. Lazy Pagination
+- **Function:** `lazy_paginate(page_size)`
+- **Description:** Yields paginated data lazily from the database.
+- **Concept:** Efficient pagination using generators.
 
-### 4. Memory-Efficient Average Age Calculation
-- **Functions:** `stream_user_ages()` and `calculate_average_age()`
-- **Description:** Streams user ages one by one, then calculates the average age without loading the entire dataset into memory.
-- **Key Concept:** Using generators for memory-efficient aggregate calculations without SQL aggregate functions.
+#### 4. Memory-Efficient Average Age Calculation
+- **Function:** `calculate_average_age()`
+- **Description:** Streams user ages and computes the average without loading all data at once.
+- **Concept:** Streaming aggregation with generators.
 
 ---
 
-## Setup
+### ✅ Decorators
 
-1. Clone this repo.
+#### 5. SQL Query Logging
+- **Decorator:** `@log_queries`
+- **Description:** Logs SQL queries before execution for observability.
+
+#### 6. Connection Management
+- **Decorator:** `@with_db_connection`
+- **Description:** Automatically opens and closes the database connection.
+
+#### 7. Transaction Handling
+- **Decorator:** `@transactional`
+- **Description:** Wraps DB operations with commit/rollback support.
+
+#### 8. Retry on Failure
+- **Decorator:** `@retry_on_failure(retries=3, delay=2)`
+- **Description:** Retries DB operations on transient errors.
+
+#### 9. Query Caching
+- **Decorator:** `@cache_query`
+- **Description:** Caches query results to reduce redundant DB hits.
+
+---
+
+### ✅ Context Managers
+
+#### 10. Class-Based Connection Manager
+- **Class:** `DatabaseConnection`
+- **Description:** Manages `__enter__` and `__exit__` for SQLite connection lifecycle.
+
+#### 11. Query Execution Context
+- **Class:** `ExecuteQuery`
+- **Description:** Takes a parameterized SQL query and returns the result in a managed context.
+
+---
+
+### ✅ Asynchronous Programming
+
+#### 12. Async Fetching with `aiosqlite`
+- **Functions:** `async_fetch_users()` & `async_fetch_older_users()`
+- **Description:** Uses `asyncio.gather()` to fetch users concurrently.
+- **Concept:** Asynchronous I/O for non-blocking DB operations.
+
+---
+
+## ⚙️ Setup
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/your-username/alx-backend-python-advanced.git
+   cd alx-backend-python-advanced
+   ```
+
 2. Install dependencies:
    ```bash
-   pip install mysql-connector-python python-dotenv
+   pip install -r requirements.txt
+   ```
+
+3. Create a `.env` file with your MySQL credentials:
+   ```env
+   DB_HOST=localhost
+   DB_USER=root
+   DB_PASSWORD=your_password
+   DB_NAME=ALX_prodev
+   ```
 
 ---
 
-## Create a .env file with your database credentials:
-```bash
-DB_HOST=localhost
-DB_USER=root
-DB_PASSWORD=your_password
-DB_NAME=ALX_prodev
-```
+## 🧪 Usage
 
----
-
-## Ensure your MySQL database and user_data table are set up accordingly.
-
-### Usage
-
-Each exercise script can be run individually. For example:
-
+Each script can be run individually, e.g.:
 
 ```bash
 python 0-stream_users.py
-python 1-stream_users_batches.py
-python 2-lazy_pagination.py
-python 3-average_age.py
+python 4-log_queries.py
+python 8-async_fetch.py
 ```
+
+---
+
+## 📌 Notes
+
+- SQLite is used for some advanced tasks (decorators, context managers, async).
+- MySQL is used for streaming and generator exercises.
+- Make sure corresponding tables exist and are seeded appropriately before testing.
+
+---
+
+Let me know if you’d like a `requirements.txt` or `.env.example` added!
