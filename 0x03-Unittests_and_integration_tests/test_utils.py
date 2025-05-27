@@ -4,7 +4,9 @@
 import unittest
 from parameterized import parameterized
 from utils import access_nested_map, get_json, memoize
-from unittest.mock import patch, Mock
+from unittest.mock import patch, Mock, PropertyMock
+from client import GithubOrgClient
+
 
 
 class TestAccessNestedMap(unittest.TestCase):
