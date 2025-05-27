@@ -2,7 +2,7 @@
 """Tests for the GithubOrgClient class."""
 
 import unittest
-from unittest.mock import patch
+from unittest.mock import patch, PropertyMock
 from parameterized import parameterized
 from client import GithubOrgClient
 
@@ -28,6 +28,19 @@ class TestGithubOrgClient(unittest.TestCase):
         # Assert: .org returns the mock json and get_json called once with expected URL
         mock_get_json.assert_called_once_with(f"https://api.github.com/orgs/{org_name}")
         self.assertEqual(result, {"login": org_name})
+
+
+class TestGithubOrgClient(unittest.TestCase):
+    """Tests for GithubOrgClient"""
+
+    def test_public_repos_url(self):
+        """Test that _public_repos_url returns correct value from org"""
+        payload = {"repos_url": "https://api.github.com/orgs/google/repos"}
+
+        with patch('client.GithubOrgClient.org', new_callable=PropertyMock) as mock_org:
+            mock_org.return_value = payload
+            client = GithubOrgClient("google")
+            self.assertEqual(client._public_repos_url, payload["repos_url"])
 
 
 if __name__ == "__main__":

@@ -22,3 +22,7 @@ class GithubOrgClient:
     def org(self):
         """Return organization data from GitHub."""
         return get_json(self.ORG_URL.format(self.org_name))
+
+    @property
+    def _public_repos_url(self):
+        return self.org["repos_url"]
