@@ -18,6 +18,11 @@ class GithubOrgClient:
     def __init__(self, org_name):
         self.org_name = org_name
 
+    @staticmethod
+    def has_license(repo, license_key):
+        """Check if a repo has a specific license key."""
+        return repo.get("license", {}).get("key") == license_key
+
     @property
     def org(self):
         """Return organization data from GitHub."""
