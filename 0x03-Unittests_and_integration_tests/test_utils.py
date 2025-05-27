@@ -3,7 +3,7 @@
 
 import unittest
 from parameterized import parameterized
-from utils import access_nested_map,get_json, memoize
+from utils import access_nested_map, get_json, memoize
 from unittest.mock import patch, Mock
 
 
@@ -28,9 +28,6 @@ class TestAccessNestedMap(unittest.TestCase):
         with self.assertRaises(KeyError) as cm:
             access_nested_map(nested_map, path)
         self.assertEqual(str(cm.exception), f"'{expected_key}'")
-
-
-
 
 
 class TestGetJson(unittest.TestCase):
@@ -74,10 +71,7 @@ class TestMemoize(unittest.TestCase):
 
 
 
-
-
-
-
-
 if __name__ == "__main__":
     unittest.main()
+
+
