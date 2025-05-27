@@ -3,7 +3,6 @@
 
 import requests
 
-
 def get_json(url):
     """GET JSON data from a URL."""
     response = requests.get(url)
@@ -35,3 +34,16 @@ class GithubOrgClient:
     def public_repos(self):
         """Returns list of repository names"""
         return [repo['name'] for repo in get_json(self._public_repos_url)]
+
+    def public_repos(self, license=None):
+        """Returns a list of repository names. Can be filtered by license."""
+        repos = get_json(self._public_repos_url)
+
+        if license is None:
+            return [repo["name"] for repo in repos]
+
+        return [
+            repo["name"]
+            for repo in repos
+            if repo.get("license", {}).get("key") == license
+        ]
