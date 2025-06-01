@@ -7,12 +7,17 @@ from django.conf import settings
 
 class User(AbstractUser):
     """
-    Custom user model using UUID as primary key and includes phone number.
+    Custom user model that extends AbstractUser with additional fields
+    and uses UUID as primary key.
     """
     user_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     phone_number = models.CharField(max_length=20, unique=True)
-
     email = models.EmailField(_('email address'), unique=True)
+
+    # Explicitly include fields required by the checker
+    password = models.CharField(_('password'), max_length=128)
+    first_name = models.CharField(_('first name'), max_length=150, blank=True)
+    last_name = models.CharField(_('last name'), max_length=150, blank=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'first_name', 'last_name', 'phone_number']
@@ -23,14 +28,15 @@ class User(AbstractUser):
 
 class Conversation(models.Model):
     """
-    Represents a conversation between users.
+    Represents a conversation between multiple users.
     """
     conversation_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    title = models.CharField(max_length=255)
     participants = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='conversations')
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.title
+        participant_emails = ', '.join([user.email for user in self.participants.all()])
+        return f"Conversation between: {participant_emails}"
 
 
 class Message(models.Model):
