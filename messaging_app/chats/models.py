@@ -1,35 +1,18 @@
+import uuid
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 
 
 class User(AbstractUser):
     """
-    Custom user model extending Django's AbstractUser.
-    You can add more fields here if needed later.
+    Custom User model extending Django's AbstractUser with additional fields.
     """
-    pass
+    user_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    email = models.EmailField(_('email address'), unique=True)
+    phone_number = models.CharField(max_length=20, blank=True, null=True)
 
-
-class Conversation(models.Model):
-    """
-    A conversation between multiple users.
-    """
-    participants = models.ManyToManyField(User, related_name='conversations')
-    created_at = models.DateTimeField(default=timezone.now)
+    # Other fields from AbstractUser like: password, first_name, last_name, username remain
 
     def __str__(self):
-        return f"Conversation {self.id}"
-
-
-class Message(models.Model):
-    """
-    A message sent by a user in a conversation.
-    """
-    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='messages')
-    conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE, related_name='messages')
-    content = models.TextField()
-    timestamp = models.DateTimeField(default=timezone.now)
-
-    def __str__(self):
-        return f"Message from {self.sender.username} at {self.timestamp}"
+        return self.username
