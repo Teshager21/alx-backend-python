@@ -1,18 +1,33 @@
 import uuid
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.utils.translation import gettext_lazy as _
 from django.conf import settings
 
 
 class User(AbstractUser):
-    # You can add custom fields here if you want, or leave as is for a standard user
-    pass
+    """
+    Custom user model using UUID as primary key and includes phone number.
+    """
+    user_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    phone_number = models.CharField(max_length=20, unique=True)
+
+    email = models.EmailField(_('email address'), unique=True)
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username', 'first_name', 'last_name', 'phone_number']
+
+    def __str__(self):
+        return self.email
 
 
 class Conversation(models.Model):
-    # Minimal Conversation model for ForeignKey reference
+    """
+    Represents a conversation between users.
+    """
     conversation_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=255)
+    participants = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='conversations')
 
     def __str__(self):
         return self.title
@@ -30,4 +45,4 @@ class Message(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Message from {self.sender.username} at {self.sent_at}"
+        return f"Message from {self.sender.email} at {self.sent_at}"
