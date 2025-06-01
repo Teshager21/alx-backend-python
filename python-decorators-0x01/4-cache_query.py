@@ -4,16 +4,18 @@ import sqlite3
 import functools
 import os
 
-DB_FILENAME = 'users.db'
+DB_FILENAME = "users.db"
 DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), DB_FILENAME)
 
 query_cache = {}
+
 
 def with_db_connection(func):
     """
     Opens a SQLite connection, passes it to the decorated function,
     and closes the connection afterwards.
     """
+
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
         conn = sqlite3.connect(DB_PATH)
@@ -21,7 +23,9 @@ def with_db_connection(func):
             return func(conn, *args, **kwargs)
         finally:
             conn.close()
+
     return wrapper
+
 
 def cache_query(func):
     """
@@ -29,6 +33,7 @@ def cache_query(func):
     Assumes the decorated function receives `conn` as first argument,
     and the SQL query string as the second argument.
     """
+
     @functools.wraps(func)
     def wrapper(conn, query, *args, **kwargs):
         if query in query_cache:
@@ -41,7 +46,9 @@ def cache_query(func):
         result = func(conn, query, *args, **kwargs)
         query_cache[query] = result
         return result
+
     return wrapper
+
 
 @with_db_connection
 @cache_query
@@ -52,6 +59,7 @@ def fetch_users_with_cache(conn, query):
     cursor = conn.cursor()
     cursor.execute(query)
     return cursor.fetchall()
+
 
 if __name__ == "__main__":
     # First call - executes and caches result

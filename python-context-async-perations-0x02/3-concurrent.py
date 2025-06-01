@@ -3,9 +3,10 @@ import asyncio
 import os
 
 # Define database path
-DB_FILENAME = 'users.db'
+DB_FILENAME = "users.db"
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DB_PATH= os.path.join(BASE_DIR, '../python-decorators-0x01', DB_FILENAME)
+DB_PATH = os.path.join(BASE_DIR, "../python-decorators-0x01", DB_FILENAME)
+
 
 # Async function to fetch all users
 async def async_fetch_users():
@@ -17,6 +18,7 @@ async def async_fetch_users():
                 print(user)
             return users
 
+
 # Async function to fetch users older than 40
 async def async_fetch_older_users():
     async with aiosqlite.connect(DB_PATH) as db:
@@ -27,12 +29,11 @@ async def async_fetch_older_users():
                 print(user)
             return older_users
 
+
 # Function to run both queries concurrently
 async def fetch_concurrently():
-    await asyncio.gather(
-        async_fetch_users(),
-        async_fetch_older_users()
-    )
+    await asyncio.gather(async_fetch_users(), async_fetch_older_users())
+
 
 # Run the async tasks
 if __name__ == "__main__":

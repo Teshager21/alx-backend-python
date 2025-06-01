@@ -2,16 +2,19 @@ import sqlite3
 import os
 
 # Define database path
-DB_FILENAME = 'users.db'
+DB_FILENAME = "users.db"
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DB_PATH= os.path.join(BASE_DIR, '../python-decorators-0x01', DB_FILENAME)
+DB_PATH = os.path.join(BASE_DIR, "../python-decorators-0x01", DB_FILENAME)
 
 print("🔍 Using DB at:", DB_PATH)
+
+
 class DatabaseConnection:
     """
     Custom context manager to handle opening and closing
     a SQLite database connection.
     """
+
     def __init__(self, db_path):
         self.db_path = db_path
         self.conn = None
@@ -24,6 +27,7 @@ class DatabaseConnection:
         if self.conn:
             self.conn.close()
             print("✅ Database connection closed.")
+
 
 # Use the context manager to query the database
 if __name__ == "__main__":

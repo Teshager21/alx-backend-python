@@ -14,29 +14,27 @@ DB_USER = os.getenv("DB_USER", "root")
 DB_PASSWORD = os.getenv("DB_PASSWORD", "")
 DB_NAME = "ALX_prodev"
 
+
 def connect_db():
-    return mysql.connector.connect(
-        host=DB_HOST,
-        user=DB_USER,
-        password=DB_PASSWORD
-    )
+    return mysql.connector.connect(host=DB_HOST, user=DB_USER, password=DB_PASSWORD)
+
 
 def create_database(connection):
     cursor = connection.cursor()
     cursor.execute(f"CREATE DATABASE IF NOT EXISTS {DB_NAME}")
     cursor.close()
 
+
 def connect_to_prodev():
     return mysql.connector.connect(
-        host=DB_HOST,
-        user=DB_USER,
-        password=DB_PASSWORD,
-        database=DB_NAME
+        host=DB_HOST, user=DB_USER, password=DB_PASSWORD, database=DB_NAME
     )
+
 
 def create_table(connection):
     cursor = connection.cursor()
-    cursor.execute("""
+    cursor.execute(
+        """
         CREATE TABLE IF NOT EXISTS user_data (
             user_id CHAR(36) PRIMARY KEY,
             name VARCHAR(255) NOT NULL,
@@ -44,8 +42,10 @@ def create_table(connection):
             age DECIMAL NOT NULL,
             INDEX idx_user_id (user_id)
         )
-    """)
+    """
+    )
     cursor.close()
+
 
 def insert_data(connection, data):
     cursor = connection.cursor()
@@ -61,18 +61,20 @@ def insert_data(connection, data):
     connection.commit()
     cursor.close()
 
+
 def load_csv_data(filename="user_data.csv"):
     data = []
-    with open(filename, mode='r') as file:
+    with open(filename, mode="r") as file:
         reader = csv.DictReader(file)
         print("CSV Columns:", reader.fieldnames)  # Debug print to check columns
         for row in reader:
             user_id = str(uuid.uuid4())  # Generate UUID for user_id
-            name = row.get('name')
-            email = row.get('email')
-            age = float(row.get('age', 0))  # Convert age to float, default 0 if missing
+            name = row.get("name")
+            email = row.get("email")
+            age = float(row.get("age", 0))  # Convert age to float, default 0 if missing
             data.append((user_id, name, email, age))
     return data
+
 
 if __name__ == "__main__":
     try:

@@ -2,9 +2,10 @@ import sqlite3
 import os
 
 # Define database path
-DB_FILENAME = 'users.db'
+DB_FILENAME = "users.db"
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DB_PATH= os.path.join(BASE_DIR, '../python-decorators-0x01', DB_FILENAME)
+DB_PATH = os.path.join(BASE_DIR, "../python-decorators-0x01", DB_FILENAME)
+
 
 class ExecuteQuery:
     def __init__(self, query, params=(), db_name="users.db"):

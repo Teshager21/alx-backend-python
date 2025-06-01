@@ -9,12 +9,10 @@ DB_USER = os.getenv("DB_USER", "root")
 DB_PASSWORD = os.getenv("DB_PASSWORD", "")
 DB_NAME = "ALX_prodev"
 
+
 def stream_user_ages():
     conn = mysql.connector.connect(
-        host=DB_HOST,
-        user=DB_USER,
-        password=DB_PASSWORD,
-        database=DB_NAME
+        host=DB_HOST, user=DB_USER, password=DB_PASSWORD, database=DB_NAME
     )
     cursor = conn.cursor()
     cursor.execute("SELECT age FROM user_data")
@@ -25,6 +23,7 @@ def stream_user_ages():
     cursor.close()
     conn.close()
     return
+
 
 def calculate_average_age():
     total_age = 0
@@ -37,6 +36,7 @@ def calculate_average_age():
         return
     average = total_age / count
     print(f"Average age of users: {average:.2f}")
+
 
 if __name__ == "__main__":
     calculate_average_age()
