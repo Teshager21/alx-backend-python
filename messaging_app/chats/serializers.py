@@ -7,11 +7,11 @@ class CustomUserSerializer(serializers.ModelSerializer):
         fields = [
             'user_id', 'username', 'email', 'first_name', 'last_name', 'phone_number', 'bio', 'is_online'
         ]
-        read_only_fields = ['user_id', 'is_online']  # you can adjust as needed
 
 
 class MessageSerializer(serializers.ModelSerializer):
-    sender = CustomUserSerializer(read_only=True)  # nested user info for sender
+    # sender will be represented as nested user, no manual CharField or SerializerMethodField
+    sender = CustomUserSerializer(read_only=True)
 
     class Meta:
         model = Message
@@ -19,8 +19,8 @@ class MessageSerializer(serializers.ModelSerializer):
 
 
 class ConversationSerializer(serializers.ModelSerializer):
-    participants = CustomUserSerializer(many=True, read_only=True)  # nested list of users
-    messages = MessageSerializer(many=True, read_only=True)  # nested list of messages in conversation
+    participants = CustomUserSerializer(many=True, read_only=True)
+    messages = MessageSerializer(many=True, read_only=True)
 
     class Meta:
         model = Conversation
