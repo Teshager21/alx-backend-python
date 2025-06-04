@@ -41,6 +41,19 @@ INSTALLED_APPS = [
     "chats",
 ]
 
+# REST Framework settings
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',  # Require login by default
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',  # Uses Django's session login
+        'rest_framework.authentication.BasicAuthentication',    # Optional: For basic HTTP auth
+    ],
+}
+
+
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
