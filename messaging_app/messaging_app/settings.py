@@ -28,6 +28,7 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -40,6 +41,8 @@ INSTALLED_APPS = [
     "rest_framework",
     "chats",
 ]
+
+AUTH_USER_MODEL = 'chats.CustomUser'
 
 # REST Framework settings
 
