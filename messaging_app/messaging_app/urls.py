@@ -19,11 +19,7 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
+    path('admin/', admin.site.urls),
+    path('api/', include('chats.urls')),  # include chats routes under /api/
+    path('api-auth/', include('rest_framework.urls')),  # include DRF login/logout views
 ]
-
-
-urlpatterns = [
-    path('api/', include('chats.urls')),
-]
-
