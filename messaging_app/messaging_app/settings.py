@@ -54,6 +54,7 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.SessionAuthentication',  # Uses Django's session login
         'rest_framework.authentication.BasicAuthentication',    # Optional: For basic HTTP auth
+        'chats.auth.CustomJWTAuthentication',
     ],
 }
 
