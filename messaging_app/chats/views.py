@@ -1,33 +1,24 @@
-from rest_framework import viewsets, status, filters
-from rest_framework.response import Response
+from rest_framework import viewsets
 from .models import Conversation, Message
 from .serializers import ConversationSerializer, MessageSerializer
-
+from .permissions import IsParticipantOfConversation
 
 class ConversationViewSet(viewsets.ModelViewSet):
     queryset = Conversation.objects.all()
     serializer_class = ConversationSerializer
-    permission_classes = [permissions.IsAuthenticated]
-    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
-    search_fields = ['title']  # example field to filter on
-    ordering_fields = ['created_at']  # example ordering field
+    permission_classes = [IsParticipantOfConversation]
 
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    def get_queryset(self):
+        return Conversation.objects.filter(participants=self.request.user)
 
 
 class MessageViewSet(viewsets.ModelViewSet):
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
-    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
-    search_fields = ['content']  # example field to filter on
-    ordering_fields = ['timestamp']  # example ordering field
+    permission_classes = [IsParticipantOfConversation]
 
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    def get_queryset(self):
+        return Message.objects.filter(conversation__participants=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(sender=self.request.user)
