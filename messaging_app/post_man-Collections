@@ -1,0 +1,170 @@
+{
+  "info": {
+    "name": "Messaging API",
+    "_postman_id": "12345678-90ab-cdef-1234-567890abcdef",
+    "description": "Postman collection for messaging_app API testing",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000",
+      "type": "string"
+    },
+    {
+      "key": "access_token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Get JWT Token",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"username\": \"your_username\",\n    \"password\": \"your_password\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/token/",
+          "host": ["{{base_url}}"],
+          "path": ["api", "token", ""]
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var jsonData = pm.response.json();",
+              "pm.environment.set(\"access_token\", jsonData.access);"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Create Conversation",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{access_token}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"title\": \"Test Conversation\",\n    \"participants\": [1, 2]\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/conversations/",
+          "host": ["{{base_url}}"],
+          "path": ["conversations", ""]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Send Message",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{access_token}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"conversation\": 1,\n    \"content\": \"Hello from Postman!\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/messages/",
+          "host": ["{{base_url}}"],
+          "path": ["messages", ""]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "List Conversations",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{access_token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/conversations/",
+          "host": ["{{base_url}}"],
+          "path": ["conversations", ""]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "List Messages with Pagination & Filters",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{access_token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/messages/?page=1&sender=1&timestamp__gte=2025-06-01T00:00:00Z",
+          "host": ["{{base_url}}"],
+          "path": ["messages", ""],
+          "query": [
+            {
+              "key": "page",
+              "value": "1"
+            },
+            {
+              "key": "sender",
+              "value": "1"
+            },
+            {
+              "key": "timestamp__gte",
+              "value": "2025-06-01T00:00:00Z"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Unauthorized Access Test (No Token)",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{base_url}}/conversations/",
+          "host": ["{{base_url}}"],
+          "path": ["conversations", ""]
+        }
+      },
+      "response": []
+    }
+  ]
+}
