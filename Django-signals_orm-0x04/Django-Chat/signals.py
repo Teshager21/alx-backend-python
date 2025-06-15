@@ -1,15 +1,29 @@
-from django.db.models.signals import pre_save
+from django.db.models.signals import post_save, pre_save, post_delete
 from django.dispatch import receiver
-from .models import Message, MessageHistory  # <-- required string: "MessageHistory"
+from django.db.models import Q
+from django.contrib.auth.models import User
+from .models import Message, Notification, MessageHistory
+
+@receiver(post_save, sender=Message)
+def new_message(sender, instance, created, **kwargs):
+    if created:
+        Notification.objects.create(message=instance)
+
 
 @receiver(pre_save, sender=Message)
-def log_message_edit(sender, instance, **kwargs):
+def edit_message(sender, instance, **kwargs):
     if instance.pk:
-        old_instance = Message.objects.get(pk=instance.pk)
-        if old_instance.content != instance.content:
-            MessageHistory.objects.create(  # <-- required string: "MessageHistory.objects.create"
-                message=instance,
-                old_content=old_instance.content,
-                edited_by=instance.sender
+        old = Message.objects.get(pk=instance.pk)
+        if old.content != instance.content:
+            MessageHistory.objects.create(
+                message = instance,
+                content = old.content,
+                edited_by = instance.sender
             )
             instance.edited = True
+
+@receiver(post_delete, sender=User)
+def user_data_cleanup(sender, instance, **kwargs):
+    Message.objects.filter(Q(sender=instance) | Q(receiver=instance)).delete()
+    MessageHistory.objects.filter(edited_by=instance).delete()
+    Notification.objects.filter(Q(recipient=instance) | Q(sender=instance)).delete()
